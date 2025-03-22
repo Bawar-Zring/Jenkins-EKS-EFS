@@ -233,3 +233,46 @@ resource "aws_eks_node_group" "eks-node-group" {
   instance_types = ["t3.medium"]
   ami_type       = "AL2_x86_64"
 }
+
+resource "aws_security_group" "efs_sg" {
+  name        = "efs-security-group"
+  description = "Security group for Amazon EFS"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    security_groups = [aws_security_group.eks_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "efs-security-group"
+  }
+}
+
+resource "aws_efs_file_system" "jenkins-efs" {
+  creation_token = "jenkins-efs"
+  performance_mode = "generalPurpose"
+  throughput_mode = "bursting"
+}
+
+resource "aws_efs_mount_target" "jenkins-efs-mount" {
+  file_system_id = aws_efs_file_system.jenkins-efs.id
+  subnet_id = aws_subnet.private-AZ1.id
+  security_groups = [aws_security_group.efs_sg.id]
+}
+
+resource "aws_efs_mount_target" "jenkins-efs-mount2" {
+  file_system_id = aws_efs_file_system.jenkins-efs.id
+  subnet_id = aws_subnet.private-AZ2.id
+  security_groups = [aws_security_group.efs_sg.id]
+}
+
