@@ -237,13 +237,13 @@ resource "aws_eks_node_group" "eks-node-group" {
 resource "aws_security_group" "efs_sg" {
   name        = "efs-security-group"
   description = "Security group for Amazon EFS"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    security_groups = [aws_security_group.eks_sg.id]
+    security_groups = [aws_security_group.eks-cluster.id]
   }
 
   egress {
@@ -276,6 +276,12 @@ resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
+resource "kubernetes_namespace" "jenkins" {
+  metadata {
+    name = "jenkins"
+  }
+}
+
 resource "helm_release" "efs_csi_driver" {
   name       = "aws-efs-csi-driver"
   repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
@@ -287,7 +293,7 @@ resource "helm_release" "jenkins" {
   name       = "jenkins"
   repository = "https://charts.jenkins.io"
   chart      = "jenkins"
-  namespace  = "jenkins"
+  namespace = kubernetes_namespace.jenkins.metadata[0].name
 
   set {
     name  = "persistence.existingClaim"
