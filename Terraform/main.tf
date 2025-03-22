@@ -276,3 +276,21 @@ resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
+resource "helm_release" "efs_csi_driver" {
+  name       = "aws-efs-csi-driver"
+  repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+  chart      = "aws-efs-csi-driver"
+  namespace  = "kube-system"
+}
+
+resource "helm_release" "jenkins" {
+  name       = "jenkins"
+  repository = "https://charts.jenkins.io"
+  chart      = "jenkins"
+  namespace  = "jenkins"
+
+  set {
+    name  = "persistence.existingClaim"
+    value = "jenkins-efs-pvc"
+  }
+}
