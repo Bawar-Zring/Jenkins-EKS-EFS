@@ -289,3 +289,28 @@ resource "aws_efs_access_point" "jenkins-efs-access-point" {
     Name = "jenkins-efs-access-point"
   }
 }
+
+resource "aws_iam_policy" "efs_access_policy" {
+  name        = "EFSAccessPolicy"
+  description = "IAM policy to allow EKS nodes to access EFS"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "elasticfilesystem:DescribeFileSystems",
+          "elasticfilesystem:DescribeMountTargets",
+          "elasticfilesystem:ClientMount",
+          "elasticfilesystem:ClientWrite"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "efs_access_policy_attachment" {
+  policy_arn = aws_iam_policy.efs_access_policy.arn
+  role       = aws_iam_role.eks-node-role.name
+}
