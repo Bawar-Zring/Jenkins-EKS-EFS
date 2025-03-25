@@ -275,3 +275,17 @@ resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   subnet_id = aws_subnet.private-AZ2.id
   security_groups = [aws_security_group.efs_sg.id]
 }
+
+resource "aws_efs_access_point" "jenkins-efs-access-point" {
+  file_system_id = aws_efs_file_system.jenkins-efs.id
+  root_directory {
+    path = "/jenkins"
+  }
+  posix_user {
+    uid = 1000
+    gid = 1000
+  }
+  tags = {
+    Name = "jenkins-efs-access-point"
+  }
+}
