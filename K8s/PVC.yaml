@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-efs-pvc
+  name: efs-pvc
 spec:
   accessModes:
     - ReadWriteMany

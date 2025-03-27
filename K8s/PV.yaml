@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: jenkins-efs-pv
+  name: efs-pv
 spec:
   capacity:
     storage: 5Gi
@@ -12,4 +12,4 @@ spec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: fs-00ba8bf0b493d0ca8::fsap-06a635ea649a26085
+    volumeHandle: fs-028f11d3089274a67::fsap-05878a25b6510ddd2
