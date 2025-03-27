@@ -119,7 +119,8 @@ resource "aws_route_table_association" "private-AZ2" {
 }
 
 resource "aws_security_group" "eks-cluster" {
-  name        = "efs-security-group"
+  name        = "eks-cluster-sg"
+  description = "Security group for EKS cluster"
   vpc_id = aws_vpc.main.id
 
   ingress {
