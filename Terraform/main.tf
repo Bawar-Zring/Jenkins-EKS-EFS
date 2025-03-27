@@ -228,8 +228,8 @@ resource "aws_security_group" "eks-cluster" {
 #   ami_type       = "AL2_x86_64"
 # }
 
-resource "aws_security_group" "efs_sg_1" {
-  name        = "efs-security-group"
+resource "aws_security_group" "efs_sg" {
+  name        = "efs-security-group-1"
   description = "Security group for Amazon EFS"
   vpc_id      = aws_vpc.main.id
 
