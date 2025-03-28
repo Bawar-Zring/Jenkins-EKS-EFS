@@ -12,4 +12,4 @@ spec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: fs-0e6f8b6dea63be38a::fsap-07a7dc70ba46bc5cc
+    volumeHandle: fs-0b7075c6ce2c11e77::fsap-0652f641333169629
