@@ -227,12 +227,6 @@ resource "aws_iam_role_policy_attachment" "efs_full_access" {
   role       = aws_iam_role.eks-node-role.name
 }
 
-#also attach an IAM policy for full access to administratoraccess
-resource "aws_iam_role_policy_attachment" "admin_full_access" {
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  role       = aws_iam_role.eks-node-role.name
-}
-
 resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = aws_eks_cluster.eks-cluster.name
   node_group_name = "eks-node-group"
@@ -296,19 +290,19 @@ resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
-resource "aws_efs_access_point" "jenkins-efs-access-point" {
-  file_system_id = aws_efs_file_system.jenkins-efs.id
-  root_directory {
-    path = "/jenkins"
-  }
-  posix_user {
-    uid = 1000
-    gid = 1000
-  }
-  tags = {
-    Name = "jenkins-efs-access-point"
-  }
-}
+# resource "aws_efs_access_point" "jenkins-efs-access-point" {
+#   file_system_id = aws_efs_file_system.jenkins-efs.id
+#   root_directory {
+#     path = "/jenkins"
+#   }
+#   posix_user {
+#     uid = 1000
+#     gid = 1000
+#   }
+#   tags = {
+#     Name = "jenkins-efs-access-point"
+#   }
+# }
 
 resource "aws_iam_policy" "efs_access_policy" {
   name        = "EFSAccessPolicy1"
