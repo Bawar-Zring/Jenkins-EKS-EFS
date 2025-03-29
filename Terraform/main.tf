@@ -215,6 +215,24 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
   role       = aws_iam_role.eks-node-role.name
 }
 
+# attache an IAM policy for full access to ec2 instances
+resource "aws_iam_role_policy_attachment" "eks_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  role       = aws_iam_role.eks-node-role.name
+}
+
+# also attach an IAM policy for full access to efs
+resource "aws_iam_role_policy_attachment" "efs_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
+  role       = aws_iam_role.eks-node-role.name
+}
+
+#also attach an IAM policy for full access to administratoraccess
+resource "aws_iam_role_policy_attachment" "admin_full_access" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.eks-node-role.name
+}
+
 resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = aws_eks_cluster.eks-cluster.name
   node_group_name = "eks-node-group"
