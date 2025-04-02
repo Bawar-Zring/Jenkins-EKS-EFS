@@ -53,6 +53,12 @@ OIDC is required for IAM authentication in Kubernetes.
         volumeHandle: <fs-XXXXXXXXX>::<fsap-XXXXXXX>
    ```
 
+   Edit serviceaccount.yaml and update annotation: account-id in arn role
+   ```
+          annotations:
+             eks.amazonaws.com/role-arn: arn:aws:iam::<your-account-id>:role/AmazonEKS_EFS_CSI_Driver_Role_test
+   ```
+
 8. Apply Kubernetes Manifests
    Deploy the necessary storage and Jenkins resources
    ```
