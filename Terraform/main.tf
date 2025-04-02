@@ -172,7 +172,7 @@ resource "aws_security_group" "eks-cluster" {
 }
 
 resource "aws_iam_role" "eks-role" {
-  name = "eks-role-jenkins-new"
+  name = "eks-role-jenkins-new-1"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -209,7 +209,7 @@ resource "aws_eks_cluster" "eks-cluster" {
 }   
 
 resource "aws_iam_role" "eks-node-role" {
-  name = "eks-node-role-jenkins-new"
+  name = "eks-node-role-jenkins-new-1"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -334,7 +334,7 @@ resource "aws_efs_access_point" "jenkins-efs-access-point" {
 }
 
 resource "aws_iam_policy" "efs_access_policy" {
-  name        = "EFSAccessPolicy1"
+  name        = "EFSAccessPolicy2"
   description = "IAM policy to allow EKS nodes to access EFS"
   policy      = jsonencode({
     Version = "2012-10-17"
