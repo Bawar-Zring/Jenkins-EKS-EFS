@@ -169,6 +169,10 @@ resource "aws_security_group" "eks-cluster" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
     }
+
+    tags = {
+        Name = "eks-cluster-sg"
+    }
 }
 
 resource "aws_iam_role" "eks-role" {
