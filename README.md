@@ -42,10 +42,10 @@ OIDC is required for IAM authentication in Kubernetes.
 
 6. Retrieve EFS Information
    Get the EFS ID and Access Point ID:
-  ```
-    aws efs describe-file-systems --query "FileSystems[*].FileSystemId" --output text
-    aws efs describe-access-points --query "AccessPoints[*].AccessPointId" --output text
-  ```
+     ```
+       aws efs describe-file-systems --query "FileSystems[*].FileSystemId" --output text
+       aws efs describe-access-points --query "AccessPoints[*].AccessPointId" --output text
+     ```
 
 7. Update Persistent Volume (PV)
    Edit PV.yaml and update volumeHandle with the retrieved EFS ID.
