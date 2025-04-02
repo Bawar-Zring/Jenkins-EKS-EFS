@@ -143,6 +143,13 @@ resource "aws_security_group" "eks-cluster" {
   vpc_id = aws_vpc.main.id
 
   ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    self        = true
+  }
+
+  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -300,13 +307,13 @@ resource "aws_efs_file_system" "jenkins-efs" {
 resource "aws_efs_mount_target" "jenkins-efs-mount" {
   file_system_id = aws_efs_file_system.jenkins-efs.id
   subnet_id = aws_subnet.private-AZ1.id
-  security_groups = [aws_security_group.efs_sg.id]
+  security_groups = [aws_security_group.efs_sg.id, aws_security_group.eks-cluster.id]
 }
 
 resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   file_system_id = aws_efs_file_system.jenkins-efs.id
   subnet_id = aws_subnet.private-AZ2.id
-  security_groups = [aws_security_group.efs_sg.id]
+  security_groups = [aws_security_group.efs_sg.id, aws_security_group.eks-cluster.id]
 }
 
 # creating aws efs access point path /jenkins uid 1000 gid 1000 seconder gid 1000 owner uid 1000 owner gid 1000 permission 0755
