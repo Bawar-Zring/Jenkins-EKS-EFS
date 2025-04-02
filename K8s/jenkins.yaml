@@ -16,12 +16,26 @@ spec:
         - name: jenkins
           image: jenkins/jenkins:lts
           ports:
-            - containerPort: 8080
-            - containerPort: 50000
+            - name: ui-port
+              containerPort: 8080
+            - name: agent-port
+              containerPort: 50000
           volumeMounts:
             - name: jenkins-storage
               mountPath: /var/jenkins_home
       volumes:
         - name: jenkins-storage
           persistentVolumeClaim:
-            claimName: efs-pvc
+            claimName: efs-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: jenkins

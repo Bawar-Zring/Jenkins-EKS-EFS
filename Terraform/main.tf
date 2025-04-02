@@ -118,6 +118,25 @@ resource "aws_route_table_association" "private-AZ2" {
   route_table_id = aws_route_table.private-routes.id
 }
 
+# creating iam policy frome existing policy json file
+resource "aws_iam_policy" "eks_policy" {
+  name        = "AmazonEKS_EFS_CSI_Driver_Policy_test"
+  description = "IAM policy for EKS EFS CSI driver"
+  policy      = file("iam-policy.json")
+}
+
+# creating IAM role from existing role json file named trust-policy.json
+resource "aws_iam_role" "eks_role" {
+  name               = "AmazonEKS_EFS_CSI_Driver_Role_test"
+  assume_role_policy = file("trust-policy.json")
+}
+
+# attaching the IAM policy to the IAM role
+resource "aws_iam_role_policy_attachment" "eks_role_policy_attachment" {
+  policy_arn = aws_iam_policy.eks_policy.arn
+  role       = aws_iam_role.eks_role.name
+}
+
 resource "aws_security_group" "eks-cluster" {
   name        = "eks-cluster-sg"
   description = "Security group for EKS cluster"
@@ -290,19 +309,22 @@ resource "aws_efs_mount_target" "jenkins-efs-mount2" {
   security_groups = [aws_security_group.efs_sg.id]
 }
 
-# resource "aws_efs_access_point" "jenkins-efs-access-point" {
-#   file_system_id = aws_efs_file_system.jenkins-efs.id
-#   root_directory {
-#     path = "/jenkins"
-#   }
-#   posix_user {
-#     uid = 1000
-#     gid = 1000
-#   }
-#   tags = {
-#     Name = "jenkins-efs-access-point"
-#   }
-# }
+# creating aws efs access point path /jenkins uid 1000 gid 1000 seconder gid 1000 owner uid 1000 owner gid 1000 permission 0755
+resource "aws_efs_access_point" "jenkins-efs-access-point" {
+  file_system_id = aws_efs_file_system.jenkins-efs.id
+  posix_user {
+    uid = 1000
+    gid = 1000
+  }
+  root_directory {
+    path = "/jenkins"
+    creation_info {
+      owner_uid = 1000
+      owner_gid = 1000
+      permissions = "0755"
+    }
+  }
+}
 
 resource "aws_iam_policy" "efs_access_policy" {
   name        = "EFSAccessPolicy1"
